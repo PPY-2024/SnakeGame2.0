@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #1a1a1a; /* New background */
+        }
+        #info {
+            text-align: center;
+            font-size: 24px;
+            color: #74b9ff; /* New text color */
+            margin-top: 10px;
+            font-family: 'Press Start 2P', cursive; /* Gaming font */
+        }
+        canvas {
+            background: linear-gradient(90deg, rgba(36, 36, 36, 1), rgba(24, 24, 24, 1)); /* Background gradient */
+            display: block;
+            margin: 20px 0;
+            border: 1px solid #2d3436; /* Border to canvas */
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="info">Player: Name Score: 0 Screen Size: 500x500</div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="score" style="font-size: 24px; color: white; text-align: center; margin-top: 10px;">Score: 0</div>
+ <script>
+    // Constants
+    let SPACE_SIZE = 50;
+    let SPEED;
+    const BODY_PARTS = 3;
+    const SNAKE_COLOR = "#0fbcf9";
+    const FOOD_COLOR = "#f53b57";
+    const OBSTACLE_COLOR = "#87928B";
+    const MOVINGOBSTACLE_COLOR = "#2d3436";
+    const GRID_LINE_COLOR = "#333";
+    const BACKGROUND_COLOR_ONE = "#242424"; // Match your gradient
+    const BACKGROUND_COLOR_TWO = "#181818"; // Match your gradient
+    const playerName = get_player_name();
+    let gridSize = get_grid_size();
+
+    // Get grid size and adjust space size accordingly
+    while (true) {
+        if (gridSize < 5 || gridSize > 25 || isNaN(gridSize)) {
+            gridSize = get_grid_size();
+        } else if (15 <= gridSize && gridSize < 18) {
+            SPACE_SIZE = 40;
+            break;
+        } else if (18 <= gridSize && gridSize < 22) {
+            SPACE_SIZE = 33;
+            break;
+        } else if (22 <= gridSize && gridSize <= 25) {
+            SPACE_SIZE = 29;
+            break;
+        } else break;
+    }
+
+    SPEED = SPACE_SIZE * 10;
+    const GAME_WIDTH = gridSize * SPACE_SIZE;
+    const GAME_HEIGHT = gridSize * SPACE_SIZE;
+    let score = 0;
+    let direction = 'down';
+    let directionQueue = [];
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = GAME_WIDTH;
+    canvas.height = GAME_HEIGHT;
+
+    function get_player_name() {
+        let playerName = prompt("Enter your name:");
+        return playerName;
+    }
+
+    function get_grid_size() {
+        let gridSize = prompt("Enter the size of the grid from 5x5 to 25x25 (e.g. 10):");
+        return parseInt(gridSize);
+    }
+
+    function createSquare(x, y, color, drawGridLine = false) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x + SPACE_SIZE / 2, y + SPACE_SIZE / 2, SPACE_SIZE / 2, 0, Math.PI * 2);
+        ctx.fill();
+        if (drawGridLine) {
+            ctx.strokeStyle = GRID_LINE_COLOR;
+            ctx.lineWidth = 1;
+            ctx.stroke(); // Adds a grid line
+        }
+        ctx.closePath();
+    }
+
+    function createFood(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x + SPACE_SIZE / 2, y + SPACE_SIZE / 2, SPACE_SIZE / 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    class Snake {
+        constructor() {
+            this.bodySize = BODY_PARTS;
+            this.coordinates = [];
+            for (let i = 0; i < BODY_PARTS; i++) {
+                this.coordinates.push([0, 0]);
+            }
+            for (const [x, y] of this.coordinates) {
+                createSquare(x, y, SNAKE_COLOR, false); // No grid line for snake body
+            }
+        }
+        grow() {
+            this.coordinates.push([...this.coordinates[this.coordinates.length - 1]]);
+        }
+    }
+
+    class Obstacle {
+        constructor(snakeCoordinates) {
+            this.coordinates = this.generateCoordinates(snakeCoordinates);
+            const [x, y] = this.coordinates;
+            createSquare(x, y, OBSTACLE_COLOR);
+        }
+
+        generateCoordinates(snakeCoordinates) {
+            while (true) {
+                const x = Math.floor(Math.random() * GAME_WIDTH / SPACE_SIZE) * SPACE_SIZE;
+                const y = Math.floor(Math.random() * GAME_HEIGHT / SPACE_SIZE) * SPACE_SIZE;
+                const collision = snakeCoordinates.some(coordinate => coordinate[0] === x && coordinate[1] === y);
+                if (!collision) {
+                    return [x, y];
+                }
+            }
+        }
+    }
+
+    class MovingObstacle {
+        constructor(snakeCoordinates) {
+            this.coordinates = this.generateCoordinates(snakeCoordinates);
+            const [x, y] = this.coordinates;
+            this.square = createSquare(x, y, MOVINGOBSTACLE_COLOR);
+            this.direction = 'left';
+        }
+
+        generateCoordinates(snakeCoordinates) {
+            while (true) {
+                const x = Math.floor(Math.random() * GAME_WIDTH / SPACE_SIZE) * SPACE_SIZE;
+                const y = Math.floor(Math.random() * GAME_HEIGHT / SPACE_SIZE) * SPACE_SIZE;
+                let collision = snakeCoordinates.some(coordinate => coordinate[0] === x && coordinate[1] === y);
+                if (!collision) {
+                    return [x, y];
+                }
+            }
+        }
+
+        move() {
+            let [x, y] = this.coordinates;
+            ctx.clearRect(x, y, SPACE_SIZE, SPACE_SIZE);
+            if (this.direction === 'left') {
+                x -= SPACE_SIZE;
+                this.direction = 'right';
+            } else if (this.direction === 'right') {
+                x += SPACE_SIZE;
+                this.direction = 'left';
+            }
+            this.coordinates = [x, y];
+            this.square = createSquare(x, y, MOVINGOBSTACLE_COLOR);
+        }
+    }
+
+    class Food {
+        constructor(snakeCoordinates) {
+            this.coordinates = this.generateCoordinates(snakeCoordinates);
+            const [x, y] = this.coordinates;
+            createFood(x, y, FOOD_COLOR);
+        }
+
+        generateCoordinates(snakeCoordinates) {
+            while (true) {
+                const x = Math.floor(Math.random() * GAME_WIDTH / SPACE_SIZE) * SPACE_SIZE;
+                const y = Math.floor(Math.random() * GAME_HEIGHT / SPACE_SIZE) * SPACE_SIZE;
+                const collision = snakeCoordinates.some(coordinate => coordinate[0] === x && coordinate[1] === y);
+                if (!collision) {
+                    return [x, y];
+                }
+            }
+        }
+    }
+
+    function changeDirection(newDirection) {
+        directionQueue.push(newDirection);
+    }
+
+    function processDirectionQueue() {
+        const oppositeDirections = {
+            up: 'down',
+            down: 'up',
+            left: 'right',
+            right: 'left'
+        };
+        if (directionQueue.length > 0) {
+            const newDirection = directionQueue.shift();
+            if (newDirection !== oppositeDirections[direction]) {
+                direction = newDirection;
+            }
+        }
+    }
+
+    function nextTurn(snake, food) {
+        processDirectionQueue();
+        let [x, y] = snake.coordinates[0];
+        switch (direction) {
+            case 'up': y -= SPACE_SIZE; break;
+            case 'down': y += SPACE_SIZE; break;
+            case 'left': x -= SPACE_SIZE; break;
+            case 'right': x += SPACE_SIZE; break;
+        }
+        if (x < 0 || x >= GAME_WIDTH || y < 0 || y >= GAME_HEIGHT || checkSelfCollision(snake, x, y)) {
+            return gameOver();
+        }
+        snake.coordinates.unshift([x, y]);
+        createSquare(x, y, SNAKE_COLOR, false); // No grid line for snake body
+        if (x === food.coordinates[0] && y === food.coordinates[1]) {
+            score++;
+            document.getElementById('score').innerText = "Score: " + score;
+            SPEED = SPEED * 0.93;
+            food = new Food(snake.coordinates);
+            snake.grow();
+            updateInfoLabel();
+        } else {
+            const [lastX, lastY] = snake.coordinates.pop();
+            ctx.clearRect(lastX, lastY, SPACE_SIZE, SPACE_SIZE);
+
+            // Fill the cleared area with the correct background color
+            fillBackgroundSquare(lastX, lastY);
+        }
+        setTimeout(() => nextTurn(snake, food), SPEED);
+    }
+
+    function checkSelfCollision(snake, x, y) {
+        for (let i = 1; i < snake.coordinates.length; i++) {
+            if (x === snake.coordinates[i][0] && y === snake.coordinates[i][1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function fillBackgroundSquare(x, y) {
+        // Fill the background square with the appropriate color
+        const a = Math.floor(x / SPACE_SIZE);
+        const b = Math.floor(y / SPACE_SIZE);
+        ctx.fillStyle = (a + b) % 2 === 0 ? BACKGROUND_COLOR_ONE : BACKGROUND_COLOR_TWO;
+        ctx.fillRect(x, y, SPACE_SIZE, SPACE_SIZE);
+    }
+
+    function gameOver() {
+        ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        ctx.font = `${SPACE_SIZE / 2.5}px consolas`;
+        ctx.fillStyle = "red";
+        ctx.textAlign = "center";
+        ctx.fillText("GAME OVER! Score: " + score, GAME_WIDTH / 2, GAME_HEIGHT / 2);
+        stopMovingObstacles();
+        const data = { name: playerName, map_size: gridSize, score: score };
+        fetch('/submit_score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(response => response.json()).then(data => {
+            console.log('Success:', data);
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+        throw new Error("Game Over");
+    }
+
+    function stopMovingObstacles() {
+        clearInterval(movingObstacleInterval);
+    }
+
+    function updateInfoLabel() {
+        const infoLabel = document.getElementById("info");
+        infoLabel.innerText = `Player: ${playerName} Score: ${score} Screen Size: ${gridSize}x${gridSize}`;
+    }
+
+    const snake = new Snake();
+    const obstacles = [];
+    const movingObstacles = [];
+    let movingObstacleInterval;
+
+    updateInfoLabel();
+
+    let food = new Food(snake.coordinates);
+
+    document.addEventListener('keydown', (event) => {
+        switch (event.key) {
+            case 'ArrowUp': changeDirection('up'); break;
+            case 'ArrowDown': changeDirection('down'); break;
+            case 'ArrowLeft': changeDirection('left'); break;
+            case 'ArrowRight': changeDirection('right'); break;
+            case 'Escape': gameOver(); break;
+        }
+    });
+
+    nextTurn(snake, food);
+</script>
