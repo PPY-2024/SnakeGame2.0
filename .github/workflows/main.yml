@@ -18,19 +18,30 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: List files for debugging
+        run: ls -la
+        working-directory: pythonProject
+
+      - name: List files in subdirectories for debugging
+        run: find . -type f
+        working-directory: pythonProject
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+        working-directory: pythonProject
 
       - name: Run tests
         run: |
           pytest
+        working-directory: pythonProject
         env:
           CI: true
 
       - name: Build Docker image
         run: docker build -t snake_game:latest .
+        working-directory: pythonProject
 
       - name: Push Docker image to Docker Hub
         env:
