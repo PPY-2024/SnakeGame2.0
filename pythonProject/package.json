@@ -1,0 +1,20 @@
+{
+  "name": "snake-game",
+  "version": "1.0.0",
+  "description": "Snake game project",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --config jest.config.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^21.1.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "util": "^0.12.5"
+  }
+}
