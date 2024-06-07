@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9240a997-58e8-4e3f-82ae-366f826c1bb9" name="Changes" comment="" />
+    <list default="true" id="9240a997-58e8-4e3f-82ae-366f826c1bb9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/pythonProject/app.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pythonProject/templates/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pythonProject/templates/script.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pythonProject/templates/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/ frontend/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/ frontend/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/pythonProject/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/ frontend/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/pythonProject/mongodb.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/pythonProject/backend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/backend/app.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/backend/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/pythonProject/backend/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/backend/game_logic.py" beforeDir="false" afterPath="$PROJECT_DIR$/pythonProject/backend/game_logic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/pythonProject/backend/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pythonProject/main.py" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,24 +27,24 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2ghqJijCgqJzMWPtEpB5VBpPGVm" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/nchav/Desktop/Snake2/SnakeGame2.0",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/nchav/Desktop/Snake2/SnakeGame2.0&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -47,6 +61,8 @@
       <option name="presentableId" value="Default" />
       <updated>1716160087754</updated>
       <workItem from="1716160088989" duration="211000" />
+      <workItem from="1716442366854" duration="9000" />
+      <workItem from="1716442410935" duration="1000" />
     </task>
     <servers />
   </component>
