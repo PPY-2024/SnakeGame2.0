@@ -51,7 +51,7 @@ jobs:
         working-directory: pythonProject
 
       - name: Build Docker image
-        run: docker build -t snake_game:latest -f pythonProject/Dockerfile .
+        run: docker build -t snake_game:latest .
         working-directory: pythonProject
 
       - name: Push Docker image to Docker Hub
