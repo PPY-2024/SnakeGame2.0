@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '14'  # or the version of Node.js your project uses
 
       - name: Clean node_modules and package-lock
         run: |
@@ -50,16 +50,8 @@ jobs:
           pip install -r requirements.txt
         working-directory: pythonProject
 
-      - name: List files for debugging before Docker build
-        run: ls -la
-        working-directory: pythonProject
-
-      - name: List files in subdirectories for debugging before Docker build
-        run: find . -type f
-        working-directory: pythonProject
-
       - name: Build Docker image
-        run: docker build -t snake_game:latest -f ./pythonProject/Dockerfile ./pythonProject
+        run: docker build -t snake_game:latest -f pythonProject/Dockerfile pythonProject
 
       - name: Push Docker image to Docker Hub
         env:
