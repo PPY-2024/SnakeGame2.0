@@ -56,7 +56,7 @@ jobs:
           ls -la pythonProject
 
       - name: Build Docker image
-        run: docker build -t snake_game:latest -f pythonProject/Dockerfile pythonProject
+        run: docker build -t snake_game:latest .
 
       - name: Push Docker image to Docker Hub
         env:
