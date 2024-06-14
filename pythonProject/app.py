@@ -5,7 +5,7 @@ import logging
 
 app = Flask(__name__)
 
-# Enable debug mode for detailed error message
+# Enable debug mode for detailed error messages
 app.config['DEBUG'] = True
 
 # Set up logging
