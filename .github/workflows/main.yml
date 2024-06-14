@@ -50,6 +50,11 @@ jobs:
           pip install -r requirements.txt
         working-directory: pythonProject
 
+      - name: Verify directory structure
+        run: |
+          ls -la
+          ls -la pythonProject
+
       - name: Build Docker image
         run: docker build -t snake_game:latest -f pythonProject/Dockerfile pythonProject
 
