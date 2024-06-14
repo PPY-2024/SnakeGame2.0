@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # or the version of Node.js your project uses
+          node-version: '14'
 
       - name: Clean node_modules and package-lock
         run: |
@@ -48,6 +48,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+        working-directory: pythonProject
+
+      - name: List files for debugging before Docker build
+        run: ls -la
+        working-directory: pythonProject
+
+      - name: List files in subdirectories for debugging before Docker build
+        run: find . -type f
         working-directory: pythonProject
 
       - name: Build Docker image
