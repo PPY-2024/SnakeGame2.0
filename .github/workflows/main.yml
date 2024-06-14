@@ -56,7 +56,21 @@ jobs:
           ls -la pythonProject
 
       - name: Build Docker image
-        run: docker build -t snake_game:latest .
+        run: docker build -t snake_game:latest -f pythonProject/Dockerfile pythonProject
+
+      - name: Run Docker container
+        run: |
+          docker run -d --name snake_game_test -p 5000:5000 snake_game:latest
+          sleep 10  # Wait for the container to start
+
+      - name: Verify Docker container is running
+        run: docker ps -a
+
+      - name: Stop Docker container
+        run: docker stop snake_game_test
+
+      - name: Remove Docker container
+        run: docker rm snake_game_test
 
       - name: Push Docker image to Docker Hub
         env:
