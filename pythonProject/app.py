@@ -11,7 +11,7 @@ app.config['DEBUG'] = True
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
-# MongoDB configuration
+# MongoDB configuration and comment 
 try:
     client = MongoClient('mongodb://localhost:27017/')
     db = client['game_data']
